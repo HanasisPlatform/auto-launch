@@ -1,5 +1,5 @@
 {
-  "name": "auto-launch",
+  "name": "@hanasis/auto-launch",
   "version": "6.0.0-rc.2",
   "description": "Launch node applications or executables at login (Mac, Windows, Linux and FreeBSD)",
   "type": "module",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Teamwork/node-auto-launch"
+    "url": "git+https://github.com/HanasisPlatform/auto-launch.git"
   },
   "keywords": [
     "login",
@@ -30,14 +30,21 @@
     "boot",
     "login-items"
   ],
-  "author": "Donal Linehan",
+  "author": "Donal Linehan, Hanasis",
   "contributors": [
-    "Adam Lynch <adam@teamwork.com>"
+    {
+      "name": "Adam Lynch",
+      "email": "adam@teamwork.com"
+    },
+    {
+      "name": "Hanasis Platform",
+      "email": "hanasispf@hanasis.com"
+    }
   ],
-  "homepage": "https://github.com/Teamwork/node-auto-launch",
+  "homepage": "https://github.com/HanasisPlatform/auto-launch",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Teamwork/node-auto-launch/issues"
+    "url": "https://github.com/HanasisPlatform/auto-launch"
   },
   "devDependencies": {
     "@babel/core": "^7.23.6",
@@ -53,5 +60,8 @@
     "applescript": "^1.0.0",
     "untildify": "^5.0.0",
     "winreg": "1.2.4"
+  },
+  "directories": {
+    "test": "tests"
   }
 }
