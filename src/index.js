@@ -1,63 +1,94 @@
-import pathTools from 'path';
-import autoLaunchHandler from './library/autoLaunchHandler.js';
+var AutoLaunch, isPathAbsolute,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-// Public: The main auto-launch class
-export default class AutoLaunch {
+isPathAbsolute = require('path-is-absolute');
+
+module.exports = AutoLaunch = (function() {
+
   /* Public */
-
-  // {Object}
-  //  :name - {String}
-  //  :path - (Optional) {String}
-  //  :options - (Optional) {Object}
-  //      :launchInBackground, - (Optional) {String}. If set, either use default --hidden arg or specified one.
-  //      :mac - (Optional) {Object}
-  //          :useLaunchAgent - (Optional) {Boolean}. If `true`, use filed-based Launch Agent. Otherwise use AppleScript
-  //           to add Login Item
-  //      :extraArgs - (Optional) {Array}
-  constructor({ name, path, options }) {
-    // Name is the only mandatory parameter and must neither be null nor empty
-    if (!name) { throw new Error('You must specify a name'); }
-
-    const opts = {
+  function AutoLaunch(arg) {
+    var isHidden, mac, name, path, versions;
+    name = arg.name, isHidden = arg.isHidden, mac = arg.mac, path = arg.path;
+    this.fixOpts = bind(this.fixOpts, this);
+    this.isEnabled = bind(this.isEnabled, this);
+    this.disable = bind(this.disable, this);
+    this.enable = bind(this.enable, this);
+    if (name == null) {
+      throw new Error('You must specify a name');
+    }
+    this.opts = {
       appName: name,
-      options: {
-        launchInBackground: (options && (options.launchInBackground != null)) ? options.launchInBackground : false,
-        mac: (options && (options.mac != null)) ? options.mac : {},
-        extraArguments: (options && (options.extraArguments != null)) ? options.extraArgs : []
-      }
+      isHiddenOnLaunch: isHidden != null ? isHidden : false,
+      mac: mac != null ? mac : {}
     };
-
-    const versions = typeof process !== 'undefined' && process !== null ? process.versions : undefined;
+    versions = typeof process !== "undefined" && process !== null ? process.versions : void 0;
     if (path != null) {
-      // Verify that the path is absolute or is an AppX path
-      if ((!pathTools.isAbsolute(path)) && !process.windowsStore) {
+      if (!isPathAbsolute(path)) {
         throw new Error('path must be absolute');
       }
-      opts.appPath = path;
-    } else if (
-      (versions != null)
-          && ((versions.nw != null) || (versions['node-webkit'] != null) || (versions.electron != null))) {
-      // Autodetecting the appPath from the execPath.
-      // This appPath will need to be fixed later depending of the OS used
-      // TODO: is this the reason behind issue 92: https://github.com/Teamwork/node-auto-launch/issues/92
-      opts.appPath = process.execPath;
+      this.opts.appPath = path;
+    } else if ((versions != null) && ((versions.nw != null) || (versions['node-webkit'] != null) || (versions.electron != null))) {
+      this.opts.appPath = process.execPath;
     } else {
       throw new Error('You must give a path (this is only auto-detected for NW.js and Electron apps)');
     }
-
-    this.api = autoLaunchHandler(opts);
+    this.fixOpts();
+    this.api = null;
+    if (/^win/.test(process.platform)) {
+      this.api = require('./AutoLaunchWindows');
+    } else if (/darwin/.test(process.platform)) {
+      this.api = require('./AutoLaunchMac');
+    } else if ((/linux/.test(process.platform)) || (/freebsd/.test(process.platform))) {
+      this.api = require('./AutoLaunchLinux');
+    } else {
+      throw new Error('Unsupported platform');
+    }
   }
 
-  enable() {
-    return this.api.enable();
-  }
+  AutoLaunch.prototype.enable = function() {
+    return this.api.enable(this.opts);
+  };
 
-  disable() {
-    return this.api.disable();
-  }
+  AutoLaunch.prototype.disable = function() {
+    return this.api.disable(this.opts.appName, this.opts.mac);
+  };
 
-  // Returns a Promise which resolves to a {Boolean}
-  isEnabled() {
-    return this.api.isEnabled();
-  }
-}
+  AutoLaunch.prototype.isEnabled = function() {
+    return this.api.isEnabled(this.opts.appName, this.opts.mac);
+  };
+
+
+  /* Private */
+
+  AutoLaunch.prototype.fixMacExecPath = function(path, macOptions) {
+    path = path.replace(/(^.+?[^\/]+?\.app)\/Contents\/(Frameworks\/((\1|[^\/]+?) Helper)\.app\/Contents\/MacOS\/\3|MacOS\/Electron)/, '$1');
+    if (!macOptions.useLaunchAgent) {
+      path = path.replace(/\.app\/Contents\/MacOS\/[^\/]*$/, '.app');
+    }
+    return path;
+  };
+
+  AutoLaunch.prototype.fixOpts = function() {
+    var tempPath;
+    this.opts.appPath = this.opts.appPath.replace(/\/$/, '');
+    if (/darwin/.test(process.platform)) {
+      this.opts.appPath = this.fixMacExecPath(this.opts.appPath, this.opts.mac);
+    }
+    if (this.opts.appPath.indexOf('/') !== -1) {
+      tempPath = this.opts.appPath.split('/');
+      this.opts.appName = tempPath[tempPath.length - 1];
+    } else if (this.opts.appPath.indexOf('\\') !== -1) {
+      tempPath = this.opts.appPath.split('\\');
+      this.opts.appName = tempPath[tempPath.length - 1];
+      this.opts.appName = this.opts.appName.substr(0, this.opts.appName.length - '.exe'.length);
+    }
+    if (/darwin/.test(process.platform)) {
+      if (this.opts.appName.indexOf('.app', this.opts.appName.length - '.app'.length) !== -1) {
+        return this.opts.appName = this.opts.appName.substr(0, this.opts.appName.length - '.app'.length);
+      }
+    }
+  };
+
+  return AutoLaunch;
+
+})();

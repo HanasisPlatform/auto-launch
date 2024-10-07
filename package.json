@@ -1,26 +1,17 @@
 {
   "name": "@hanasis/auto-launch",
-  "version": "6.0.2",
-  "description": "Launch node applications or executables at login (Mac, Windows, Linux and FreeBSD)",
-  "type": "module",
-  "main": "./src/index.js",
-  "exports": "./src/index.js",
+  "version": "6.0.6",
+  "description": "Launch node applications or executables at login (Mac, Windows, and Linux)",
+  "main": "src/index.js",
   "scripts": {
-    "lint": "eslint --ext .js src tests",
-    "lint:fix": "eslint --ext .js src tests --fix",
-    "test": "mocha tests/test.js --reporter spec"
-  },
-  "pre-commit": {
-    "run": [
-      "test"
-    ]
+    "test": "gulp test"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=4.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HanasisPlatform/auto-launch.git"
+    "url": "https://github.com/HanasisPlatform/auto-launch"
   },
   "keywords": [
     "login",
@@ -30,38 +21,32 @@
     "boot",
     "login-items"
   ],
-  "author": "Donal Linehan, Hanasis",
+  "author": "Donal Linehan, Hanasis Platform",
   "contributors": [
-    {
-      "name": "Adam Lynch",
-      "email": "adam@teamwork.com"
-    },
-    {
-      "name": "Hanasis Platform",
-      "email": "hanasispf@hanasis.com"
-    }
+    "Adam Lynch <adam@teamwork.com>, Hanasis Platform <pfteam@hanasis.com>"
   ],
-  "homepage": "https://github.com/HanasisPlatform/auto-launch",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/HanasisPlatform/auto-launch"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.6",
-    "@babel/eslint-parser": "^7.23.0",
-    "@babel/preset-env": "^7.23.6",
-    "chai": "^4.3.0",
-    "eslint": "^8.55.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.29.0",
-    "mocha": "^10.2.0"
+    "chai": "^3.5.0",
+    "coffee-script": "^1.10.0",
+    "gulp": "^3.9.1",
+    "gulp-coffee": "^2.3.2",
+    "gulp-coffeelint": "^0.6.0",
+    "gulp-coffeelint-threshold": "^1.0.0",
+    "gulp-load-plugins": "^1.2.0",
+    "gulp-mocha": "^3.0.1",
+    "gulp-util": "^3.0.7",
+    "teamwork-coffeelint-rules": "0.0.1"
   },
+  "homepage": "https://github.com/HanasisPlatform/auto-launch",
   "dependencies": {
     "applescript": "^1.0.0",
-    "untildify": "^5.0.0",
+    "mkdirp": "^0.5.1",
+    "path-is-absolute": "^1.0.0",
+    "untildify": "^3.0.2",
     "winreg": "1.2.4"
-  },
-  "directories": {
-    "test": "tests"
   }
 }
