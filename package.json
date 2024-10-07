@@ -1,0 +1,57 @@
+{
+  "name": "auto-launch",
+  "version": "6.0.0-rc.2",
+  "description": "Launch node applications or executables at login (Mac, Windows, Linux and FreeBSD)",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": "./src/index.js",
+  "scripts": {
+    "lint": "eslint --ext .js src tests",
+    "lint:fix": "eslint --ext .js src tests --fix",
+    "test": "mocha tests/test.js --reporter spec"
+  },
+  "pre-commit": {
+    "run": [
+      "test"
+    ]
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Teamwork/node-auto-launch"
+  },
+  "keywords": [
+    "login",
+    "launch",
+    "node-webkit",
+    "electron",
+    "boot",
+    "login-items"
+  ],
+  "author": "Donal Linehan",
+  "contributors": [
+    "Adam Lynch <adam@teamwork.com>"
+  ],
+  "homepage": "https://github.com/Teamwork/node-auto-launch",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Teamwork/node-auto-launch/issues"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.6",
+    "@babel/eslint-parser": "^7.23.0",
+    "@babel/preset-env": "^7.23.6",
+    "chai": "^4.3.0",
+    "eslint": "^8.55.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "mocha": "^10.2.0"
+  },
+  "dependencies": {
+    "applescript": "^1.0.0",
+    "untildify": "^5.0.0",
+    "winreg": "1.2.4"
+  }
+}
