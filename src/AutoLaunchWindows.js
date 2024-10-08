@@ -15,8 +15,8 @@ module.exports = {
 
   /* Public */
   enable: function(arg) {
-    var appName, appPath, isHiddenOnLaunch;
-    appName = arg.appName, appPath = arg.appPath, isHiddenOnLaunch = arg.isHiddenOnLaunch;
+    var appName, appPath, isHiddenOnLaunch, extraArguments;
+    appName = arg.appName, appPath = arg.appPath, isHiddenOnLaunch = arg.options.isHiddenOnLaunch, extraArguments = arg.options.extraArguments;
     return new Promise(function(resolve, reject) {
       var args, pathToAutoLaunchedApp, ref, updateDotExe;
       pathToAutoLaunchedApp = appPath;
@@ -28,9 +28,15 @@ module.exports = {
         if (isHiddenOnLaunch) {
           args += ' --process-start-args "--hidden"';
         }
+        if (extraArguments && extraArguments.length > 0) {
+          args += ' ' + extraArguments.join(' ');
+        }
       } else {
         if (isHiddenOnLaunch) {
           args += ' --hidden';
+        }
+        if (extraArguments && extraArguments.length > 0) {
+          args += ' ' + extraArguments.join(' ');
         }
       }
       return regKey.set(appName, Winreg.REG_SZ, "\"" + pathToAutoLaunchedApp + "\"" + args, function(err) {

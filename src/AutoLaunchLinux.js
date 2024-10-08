@@ -9,7 +9,7 @@ module.exports = {
   /* Public */
   enable: function(arg) {
     var appName, appPath, data, hiddenArg, isHiddenOnLaunch;
-    appName = arg.appName, appPath = arg.appPath, isHiddenOnLaunch = arg.isHiddenOnLaunch;
+    appName = arg.appName, appPath = arg.appPath, isHiddenOnLaunch = arg.options.isHiddenOnLaunch;
     hiddenArg = isHiddenOnLaunch ? ' --hidden' : '';
     data = "[Desktop Entry]\nType=Application\nVersion=1.0\nName=" + appName + "\nComment=" + appName + "startup script\nExec=" + appPath + hiddenArg + "\nStartupNotify=false\nTerminal=false";
     return fileBasedUtilities.createFile({

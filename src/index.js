@@ -8,7 +8,7 @@ module.exports = AutoLaunch = (function() {
   /* Public */
   function AutoLaunch(arg) {
     var isHidden, mac, name, path, versions;
-    name = arg.name, isHidden = arg.isHidden, mac = arg.mac, path = arg.path;
+    name = arg.name, isHidden = arg.isHidden, mac = arg.mac, path = arg.path, extraArgs = arg.extraArgs;
     this.fixOpts = bind(this.fixOpts, this);
     this.isEnabled = bind(this.isEnabled, this);
     this.disable = bind(this.disable, this);
@@ -18,8 +18,11 @@ module.exports = AutoLaunch = (function() {
     }
     this.opts = {
       appName: name,
-      isHiddenOnLaunch: isHidden != null ? isHidden : false,
-      mac: mac != null ? mac : {}
+      options: {
+        isHiddenOnLaunch: isHidden != null ? isHidden : false,
+        mac: mac != null ? mac : {},
+        extraArguments: extraArgs  != null ? extraArgs  : {}
+      }
     };
     versions = typeof process !== "undefined" && process !== null ? process.versions : void 0;
     if (path != null) {
