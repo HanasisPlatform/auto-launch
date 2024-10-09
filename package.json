@@ -1,6 +1,6 @@
 {
   "name": "@hanasis/auto-launch",
-  "version": "6.0.7",
+  "version": "6.0.8",
   "description": "Launch node applications or executables at login (Mac, Windows, and Linux)",
   "main": "src/index.js",
   "scripts": {

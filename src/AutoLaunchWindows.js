@@ -7,7 +7,8 @@ path = require('path');
 Winreg = require('winreg');
 
 regKey = new Winreg({
-  hive: Winreg.HKCU,
+  //hive: Winreg.HKCU,
+  hive: Winreg.HKLM,
   key: '\\Software\\Microsoft\\Windows\\CurrentVersion\\Run'
 });
 
